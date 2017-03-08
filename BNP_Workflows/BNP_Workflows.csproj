@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{59C01E28-B6B5-49EF-86B0-E8CE4E88B6A9}</ProjectGuid>
+    <ProjectGuid>{E11B9D90-D074-4906-8A4C-772214C2FE17}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BNP_WebResources</RootNamespace>
-    <AssemblyName>BNP_WebResources</AssemblyName>
+    <RootNamespace>BNP_Workflows</RootNamespace>
+    <AssemblyName>BNP_Workflows</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
@@ -33,9 +33,29 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>BNP_Workflows.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\Microsoft.Xrm.Sdk.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xrm.Sdk.Workflow, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\Microsoft.Xrm.Sdk.Workflow.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Activities" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,32 +64,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contrat\CancelContrat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="HTML\resi_RelatedOpportunities.html" />
-    <Content Include="HTML\resi_style.html" />
-    <Content Include="IMG\resiactualites.png" />
-    <Content Include="IMG\resiAdresse.PNG" />
-    <Content Include="IMG\resicampagne.png" />
-    <Content Include="IMG\resicompetitoricon.png" />
-    <Content Include="IMG\resiconcurrents.png" />
-    <Content Include="IMG\resiContact.PNG" />
-    <Content Include="IMG\residevis.png" />
-    <Content Include="IMG\resiidentification.png" />
-    <Content Include="IMG\resiInfoperso.PNG" />
-    <Content Include="IMG\resiinformationssupplementaires.PNG" />
-    <Content Include="IMG\resiinterlocuteur.png" />
-    <Content Include="IMG\resiliens.png" />
-    <Content Include="IMG\resiloader.gif" />
-    <Content Include="IMG\resiopportunitysection.png" />
-    <Content Include="IMG\resiproductline.png" />
-    <Content Include="JS\Common.js" />
-    <Content Include="JS\OpportunityOnChange.js" />
-    <Content Include="JS\resi_Contrat.js" />
-    <Content Include="JS\resi_jquery.js" />
-    <Content Include="JS\resi_Opportunity.js" />
-    <Content Include="JS\resi_SDK.Soap.vsdoc.min.js" />
+    <Content Include="Lib\Microsoft.Crm.Sdk.Proxy.dll" />
+    <Content Include="Lib\Microsoft.Xrm.Sdk.dll" />
+    <Content Include="Lib\Microsoft.Xrm.Sdk.Workflow.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BNP_Plugins\BNP_Plugins.csproj">
+      <Project>{85DD0ECC-F1CF-47A7-AAEE-38716274E355}</Project>
+      <Name>BNP_Plugins</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="BNP_Workflows.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

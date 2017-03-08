@@ -51,11 +51,17 @@
     <Content Include="HTML\resi_style.html" />
     <Content Include="IMG\resiactualites.png" />
     <Content Include="IMG\resiAdresse.PNG" />
+    <Content Include="IMG\resiBuilt.png" />
     <Content Include="IMG\resicampagne.png" />
     <Content Include="IMG\resicompetitoricon.png" />
     <Content Include="IMG\resiconcurrents.png" />
     <Content Include="IMG\resiContact.PNG" />
+    <Content Include="IMG\resiCustomerSummary.png" />
+    <Content Include="IMG\resiDeadline.png" />
     <Content Include="IMG\residevis.png" />
+    <Content Include="IMG\resiDollar.png" />
+    <Content Include="IMG\resiHelp.png" />
+    <Content Include="IMG\resiHouse.png" />
     <Content Include="IMG\resiidentification.png" />
     <Content Include="IMG\resiInfoperso.PNG" />
     <Content Include="IMG\resiinformationssupplementaires.PNG" />
@@ -64,6 +70,7 @@
     <Content Include="IMG\resiloader.gif" />
     <Content Include="IMG\resiopportunitysection.png" />
     <Content Include="IMG\resiproductline.png" />
+    <Content Include="IMG\resiTransactions.png" />
     <Content Include="JS\Common.js" />
     <Content Include="JS\OpportunityOnChange.js" />
     <Content Include="JS\resi_Contrat.js" />

@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://xmlns.example.com/1490372061630" xmlns:ns1="http://com.bnpparibas.realestate.model.esb.contract.crm" xmlns:ns0="http://com.bnpparibas.realestate.interfaces.contract" name="Untitled" targetNamespace="http://xmlns.example.com/1490372061630" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xs:schema xmlns="http://com.bnpparibas.realestate.model.esb.contract.crm" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://com.bnpparibas.realestate.model.esb.contract.crm" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="Birthdate" type="xs:date" />
+      <xs:element name="Birthday" type="xs:date" />
+      <xs:element name="Birthplace" type="xs:string" />
+      <xs:element name="Bonus" type="xs:decimal" />
+      <xs:element name="City" type="xs:string" />
+      <xs:element name="Civility" type="xs:string" />
+      <xs:element name="Concerne_client_bnp" type="xs:boolean" />
+      <xs:element name="Country" type="xs:string" />
+      <xs:element name="Date_visa_back_office" type="xs:dateTime" />
+      <xs:element name="Date_visa_compliance" type="xs:dateTime" />
+      <xs:element name="Date_visa_dir_co" type="xs:dateTime" />
+      <xs:element name="Date_visa_dir_prog" type="xs:dateTime" />
+      <xs:element name="Date_visa_relation_acq" type="xs:dateTime" />
+      <xs:element name="Designation" type="xs:string" />
+      <xs:element name="Dossier">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ns1:contrat" />
+            <xs:element maxOccurs="unbounded" ref="ns1:TMA" />
+            <xs:element ref="ns1:commissions" />
+            <xs:element ref="ns1:parrain" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Email" type="xs:string" />
+      <xs:element name="Firstname" type="xs:string" />
+      <xs:element name="Floor" type="xs:integer" />
+      <xs:element name="Homephone" type="xs:string" />
+      <xs:element name="Lastname" type="xs:string" />
+      <xs:element name="Lignage" type="xs:string" />
+      <xs:element name="Mobilephone" type="xs:string" />
+      <xs:element name="Nationality" type="xs:string" />
+      <xs:element name="Number_of_children" type="xs:integer" />
+      <xs:element name="Objective" type="xs:string" />
+      <xs:element name="Origine" type="xs:string" />
+      <xs:element name="Prescripteur" type="xs:string" />
+      <xs:element name="Profession" type="xs:string" />
+      <xs:element name="Program_id_wincom" type="xs:string" />
+      <xs:element name="Program_name" type="xs:string" />
+      <xs:element name="Programm_id_gestcom" type="xs:string" />
+      <xs:element name="Prophone" type="xs:string" />
+      <xs:element name="Retrocession_bnp" type="xs:boolean" />
+      <xs:element name="Retrocession_bnp_code_agence" type="xs:string" />
+      <xs:element name="Retrocession_montant" type="xs:decimal" />
+      <xs:element name="Share" type="xs:decimal" />
+      <xs:element name="TMA">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" ref="ns1:ref_option" />
+            <xs:element minOccurs="0" ref="ns1:Designation" />
+            <xs:element minOccurs="0" ref="ns1:cost_ttc" />
+            <xs:element minOccurs="0" ref="ns1:is_offered" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Type" type="xs:string" />
+      <xs:element name="Vendeur_nom" type="xs:string" />
+      <xs:element name="Vendeur_prenom" type="xs:string" />
+      <xs:element name="Vendeur_uid" type="xs:string" />
+      <xs:element name="acquereur">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" ref="ns1:Civility" />
+            <xs:element ref="ns1:Firstname" />
+            <xs:element ref="ns1:Lastname" />
+            <xs:element ref="ns1:Email" />
+            <xs:element minOccurs="0" ref="ns1:Mobilephone" />
+            <xs:element minOccurs="0" ref="ns1:Prophone" />
+            <xs:element minOccurs="0" ref="ns1:Homephone" />
+            <xs:element ref="ns1:address1" />
+            <xs:element minOccurs="0" ref="ns1:address2" />
+            <xs:element minOccurs="0" ref="ns1:address3" />
+            <xs:element ref="ns1:zip_code" />
+            <xs:element ref="ns1:City" />
+            <xs:element minOccurs="0" ref="ns1:Country" />
+            <xs:element minOccurs="0" ref="ns1:has_retired" />
+            <xs:element minOccurs="0" ref="ns1:retirement_date" />
+            <xs:element minOccurs="0" ref="ns1:family_status" />
+            <xs:element minOccurs="0" ref="ns1:Birthday" />
+            <xs:element minOccurs="0" ref="ns1:Birthplace" />
+            <xs:element minOccurs="0" ref="ns1:Nationality" />
+            <xs:element minOccurs="0" ref="ns1:Profession" />
+            <xs:element minOccurs="0" ref="ns1:employer_address" />
+            <xs:element minOccurs="0" ref="ns1:employer_name" />
+            <xs:element minOccurs="0" ref="ns1:annual_income" />
+            <xs:element minOccurs="0" ref="ns1:date_annual_income" />
+            <xs:element minOccurs="0" ref="ns1:Number_of_children" />
+            <xs:element minOccurs="0" ref="ns1:credential_type" />
+            <xs:element minOccurs="0" ref="ns1:credential_number" />
+            <xs:element minOccurs="0" ref="ns1:credential_validity_end" />
+            <xs:element minOccurs="0" ref="ns1:current_house" />
+            <xs:element minOccurs="0" ref="ns1:current_rent" />
+            <xs:element minOccurs="0" ref="ns1:personnal_contribution_amount" />
+            <xs:element minOccurs="0" ref="ns1:personnal_contribution_origine" />
+            <xs:element minOccurs="0" ref="ns1:financing_need" />
+            <xs:element minOccurs="0" ref="ns1:current_loan_initial" />
+            <xs:element minOccurs="0" ref="ns1:current_loan_monthly_payment" />
+            <xs:element minOccurs="0" ref="ns1:current_loan_outstanding_capital" />
+            <xs:element minOccurs="0" ref="ns1:bridge_loan" />
+            <xs:element minOccurs="0" ref="ns1:owner_share" />
+            <xs:element minOccurs="0" ref="ns1:signing_date" />
+            <xs:element minOccurs="0" ref="ns1:signing_location" />
+            <xs:element minOccurs="0" ref="ns1:enfant" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="act_amount" type="xs:decimal" />
+      <xs:element name="address1" type="xs:string" />
+      <xs:element name="address2" type="xs:string" />
+      <xs:element name="address3" type="xs:string" />
+      <xs:element name="adv_amount" type="xs:decimal" />
+      <xs:element name="adv_funding_appeal" type="xs:decimal" />
+      <xs:element name="adv_max_amount" type="xs:decimal" />
+      <xs:element name="adv_max_rate" type="xs:decimal" />
+      <xs:element name="adv_notary_fee" type="xs:decimal" />
+      <xs:element name="adv_other" type="xs:decimal" />
+      <xs:element name="adv_other_comments" type="xs:string" />
+      <xs:element name="adv_price_reduction" type="xs:decimal" />
+      <xs:element name="adv_rate" type="xs:decimal" />
+      <xs:element name="adv_tma" type="xs:decimal" />
+      <xs:element name="adv_total_1" type="xs:decimal" />
+      <xs:element name="adv_total_2" type="xs:decimal" />
+      <xs:element name="adv_used_amount" type="xs:decimal" />
+      <xs:element name="adv_used_rate" type="xs:decimal" />
+      <xs:element name="annual_income" type="xs:decimal" />
+      <xs:element name="bank_designation" type="xs:string" />
+      <xs:element name="beneficiaire">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ns1:Share" />
+            <xs:element ref="ns1:total_commission" />
+            <xs:element ref="ns1:Bonus" />
+            <xs:element ref="ns1:booking_amount" />
+            <xs:element ref="ns1:act_amount" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="booking_amount" type="xs:decimal" />
+      <xs:element name="bridge_loan" type="xs:boolean" />
+      <xs:element name="building_name" type="xs:string" />
+      <xs:element name="commission_amount" type="xs:decimal" />
+      <xs:element name="commission_rate" type="xs:decimal" />
+      <xs:element name="commissions">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ns1:commission_rate" />
+            <xs:element ref="ns1:commission_amount" />
+            <xs:element ref="ns1:beneficiaire" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="contrat">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ns1:Vendeur_nom" />
+            <xs:element ref="ns1:Vendeur_prenom" />
+            <xs:element ref="ns1:Vendeur_uid" />
+            <xs:element ref="ns1:Program_name" />
+            <xs:element ref="ns1:Program_id_wincom" />
+            <xs:element ref="ns1:Programm_id_gestcom" />
+            <xs:element ref="ns1:statut" />
+            <xs:element minOccurs="0" ref="ns1:Date_visa_back_office" />
+            <xs:element minOccurs="0" ref="ns1:Date_visa_dir_co" />
+            <xs:element minOccurs="0" ref="ns1:Date_visa_compliance" />
+            <xs:element minOccurs="0" ref="ns1:Date_visa_dir_prog" />
+            <xs:element minOccurs="0" ref="ns1:Date_visa_relation_acq" />
+            <xs:element ref="ns1:Objective" />
+            <xs:element ref="ns1:Concerne_client_bnp" />
+            <xs:element ref="ns1:Origine" />
+            <xs:element minOccurs="0" ref="ns1:Prescripteur" />
+            <xs:element ref="ns1:Retrocession_bnp" />
+            <xs:element minOccurs="0" ref="ns1:Retrocession_montant" />
+            <xs:element minOccurs="0" ref="ns1:Retrocession_bnp_code_agence" />
+            <xs:element minOccurs="0" ref="ns1:tma_total_ttc" />
+            <xs:element minOccurs="0" ref="ns1:tma_deposit" />
+            <xs:element minOccurs="0" ref="ns1:tma_shipping" />
+            <xs:element minOccurs="0" ref="ns1:tma_date_deposit" />
+            <xs:element minOccurs="0" ref="ns1:tma_deposit_bank" />
+            <xs:element minOccurs="0" ref="ns1:tma_deposit_number" />
+            <xs:element ref="ns1:price_grid" />
+            <xs:element ref="ns1:price_tva_rate" />
+            <xs:element minOccurs="0" ref="ns1:price_post_tva" />
+            <xs:element ref="ns1:adv_max_rate" />
+            <xs:element ref="ns1:adv_max_amount" />
+            <xs:element ref="ns1:adv_price_reduction" />
+            <xs:element ref="ns1:adv_notary_fee" />
+            <xs:element ref="ns1:adv_tma" />
+            <xs:element ref="ns1:adv_funding_appeal" />
+            <xs:element ref="ns1:adv_other" />
+            <xs:element minOccurs="0" ref="ns1:adv_other_comments" />
+            <xs:element ref="ns1:adv_total_1" />
+            <xs:element ref="ns1:adv_total_2" />
+            <xs:element minOccurs="0" ref="ns1:adv_rate" />
+            <xs:element ref="ns1:final_price" />
+            <xs:element minOccurs="0" ref="ns1:no_funding_require" />
+            <xs:element minOccurs="0" ref="ns1:other_funding_method" />
+            <xs:element minOccurs="0" ref="ns1:other_funding_comments" />
+            <xs:element minOccurs="0" ref="ns1:security_deposit_amount" />
+            <xs:element minOccurs="0" ref="ns1:security_deposit_type" />
+            <xs:element minOccurs="0" ref="ns1:security_deposit_number" />
+            <xs:element minOccurs="0" ref="ns1:security_deposit_notary" />
+            <xs:element minOccurs="0" ref="ns1:Lignage" />
+            <xs:element minOccurs="0" ref="ns1:date_prereservation" />
+            <xs:element minOccurs="0" ref="ns1:dateoption" />
+            <xs:element ref="ns1:acquereur" />
+            <xs:element ref="ns1:lot" />
+            <xs:element ref="ns1:emprunt" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="cost_ttc" type="xs:decimal" />
+      <xs:element name="credential_number" type="xs:string" />
+      <xs:element name="credential_type" type="xs:string" />
+      <xs:element name="credential_validity_end" type="xs:date" />
+      <xs:element name="current_house" type="xs:string" />
+      <xs:element name="current_loan_initial" type="xs:decimal" />
+      <xs:element name="current_loan_monthly_payment" type="xs:decimal" />
+      <xs:element name="current_loan_outstanding_capital" type="xs:decimal" />
+      <xs:element name="current_rent" type="xs:decimal" />
+      <xs:element name="date_annual_income" type="xs:string" />
+      <xs:element name="date_prereservation" type="xs:date" />
+      <xs:element name="dateoption" type="xs:date" />
+      <xs:element name="employer_address" type="xs:string" />
+      <xs:element name="employer_name" type="xs:string" />
+      <xs:element name="emprunt">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" ref="ns1:bank_designation" />
+            <xs:element minOccurs="0" ref="ns1:max_rate" />
+            <xs:element minOccurs="0" ref="ns1:min_amount" />
+            <xs:element minOccurs="0" ref="ns1:min_duration" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="enfant">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ns1:Birthdate" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="family_status" type="xs:string" />
+      <xs:element name="final_price" type="xs:decimal" />
+      <xs:element name="financing_need" type="xs:decimal" />
+      <xs:element name="has_retired" type="xs:boolean" />
+      <xs:element name="identification_code" type="xs:string" />
+      <xs:element name="is_offered" type="xs:integer" />
+      <xs:element name="living_area" type="xs:integer" />
+      <xs:element name="lot">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ns1:Type" />
+            <xs:element minOccurs="0" ref="ns1:room_number" />
+            <xs:element ref="ns1:identification_code" />
+            <xs:element minOccurs="0" ref="ns1:living_area" />
+            <xs:element minOccurs="0" ref="ns1:Floor" />
+            <xs:element minOccurs="0" ref="ns1:stare_name" />
+            <xs:element minOccurs="0" ref="ns1:building_name" />
+            <xs:element ref="ns1:price_grid" />
+            <xs:element ref="ns1:tva_used_rate" />
+            <xs:element minOccurs="0" ref="ns1:price_post_tva" />
+            <xs:element ref="ns1:adv_used_rate" />
+            <xs:element minOccurs="0" ref="ns1:adv_amount" />
+            <xs:element ref="ns1:adv_used_amount" />
+            <xs:element ref="ns1:price_contract" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="max_rate" type="xs:decimal" />
+      <xs:element name="min_amount" type="xs:decimal" />
+      <xs:element name="min_duration" type="xs:integer" />
+      <xs:element name="no_funding_require" type="xs:boolean" />
+      <xs:element name="other_funding_comments" type="xs:string" />
+      <xs:element name="other_funding_method" type="xs:string" />
+      <xs:element name="owner_share" type="xs:decimal" />
+      <xs:element name="parrain" type="xs:string" />
+      <xs:element name="personnal_contribution_amount" type="xs:decimal" />
+      <xs:element name="personnal_contribution_origine" type="xs:string" />
+      <xs:element name="price_contract" type="xs:decimal" />
+      <xs:element name="price_grid" type="xs:decimal" />
+      <xs:element name="price_post_tva" type="xs:decimal" />
+      <xs:element name="price_tva_rate" type="xs:decimal" />
+      <xs:element name="ref_option" type="xs:string" />
+      <xs:element name="retirement_date" type="xs:date" />
+      <xs:element name="room_number" type="xs:integer" />
+      <xs:element name="security_deposit_amount" type="xs:decimal" />
+      <xs:element name="security_deposit_notary" type="xs:string" />
+      <xs:element name="security_deposit_number" type="xs:string" />
+      <xs:element name="security_deposit_type" type="xs:string" />
+      <xs:element name="signing_date" type="xs:dateTime" />
+      <xs:element name="signing_location" type="xs:string" />
+      <xs:element name="stare_name" type="xs:string" />
+      <xs:element name="statut" type="xs:string" />
+      <xs:element name="tma_date_deposit" type="xs:date" />
+      <xs:element name="tma_deposit" type="xs:decimal" />
+      <xs:element name="tma_deposit_bank" type="xs:string" />
+      <xs:element name="tma_deposit_number" type="xs:string" />
+      <xs:element name="tma_shipping" type="xs:decimal" />
+      <xs:element name="tma_total_ttc" type="xs:decimal" />
+      <xs:element name="total_commission" type="xs:decimal" />
+      <xs:element name="tva_used_rate" type="xs:decimal" />
+      <xs:element name="zip_code" type="xs:string" />
+    </xs:schema>
+    <xs:schema xmlns="http://com.bnpparibas.realestate.interfaces.contract" xmlns:ns0="http://com.bnpparibas.realestate.model.esb.contract.crm" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://com.bnpparibas.realestate.interfaces.contract" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:import namespace="http://com.bnpparibas.realestate.model.esb.contract.crm" />
+      <xs:element name="Request">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="ns0:Dossier" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Response">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="returnCode" />
+            <xs:element ref="returnMessage" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="returnCode" type="xs:integer" />
+      <xs:element name="returnMessage" type="xs:string" />
+      <xs:element name="root">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="Request" />
+            <xs:element ref="Response" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="Request">
+    <wsdl:part name="parameters" element="ns0:Request" />
+  </wsdl:message>
+  <wsdl:message name="Response">
+    <wsdl:part name="parameters" element="ns0:Response" />
+  </wsdl:message>
+  <wsdl:portType name="portType">
+    <wsdl:operation name="wsResiDispatcherOp">
+      <wsdl:input message="tns:Request" />
+      <wsdl:output message="tns:Response" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="intfwswsResiDispatcherEndpoint1Binding" type="tns:portType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="wsResiDispatcherOp">
+      <soap:operation soapAction="/BNPPRE_RESI_DISPATCHER/Interface/intfwsResiDispatcher-service.serviceagent/intfwswsResiDispatcherEndpoint1/wsResiDispatcherOp" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="intfwsResiDispatcher-service">
+    <wsdl:port name="intfwswsResiDispatcherEndpoint1" binding="tns:intfwswsResiDispatcherEndpoint1Binding">
+      <soap:address location="http://localhost:7290/BNPPRE_RESI_DISPATCHER/Interface/intfwsResiDispatcher-service.serviceagent/intfwswsResiDispatcherEndpoint1" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

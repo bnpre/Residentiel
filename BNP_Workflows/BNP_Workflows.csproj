@@ -55,6 +55,7 @@
     <Reference Include="System" />
     <Reference Include="System.Activities" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -64,22 +65,44 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\BNP.Model\Utils\CRMData.cs">
+      <Link>Model\Utils\CRMData.cs</Link>
+    </Compile>
     <Compile Include="Contrat\CancelContrat.cs" />
+    <Compile Include="Contrat\GenerateContractXML.cs" />
+    <Compile Include="Contrat\MergeContratDocument.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Model\Definitions\Contrat.cs" />
+    <Compile Include="Service References\GestcomWebService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="BNP_Workflows.snk" />
+    <None Include="Service References\GestcomWebService\BNP_Workflows.GestcomWebService.wsResiDispatcherOpResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\GestcomWebService\Untitled.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lib\Microsoft.Crm.Sdk.Proxy.dll" />
     <Content Include="Lib\Microsoft.Xrm.Sdk.dll" />
     <Content Include="Lib\Microsoft.Xrm.Sdk.Workflow.dll" />
+    <None Include="Service References\GestcomWebService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\GestcomWebService\configuration.svcinfo" />
+    <None Include="Service References\GestcomWebService\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BNP_Plugins\BNP_Plugins.csproj">
-      <Project>{85DD0ECC-F1CF-47A7-AAEE-38716274E355}</Project>
-      <Name>BNP_Plugins</Name>
-    </ProjectReference>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="BNP_Workflows.snk" />
+    <WCFMetadataStorage Include="Service References\GestcomWebService\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

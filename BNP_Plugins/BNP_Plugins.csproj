@@ -63,7 +63,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\CRMData.cs" />
+    <Compile Include="..\BNP.Model\Utils\CRMData.cs">
+      <Link>Model\CRMData.cs</Link>
+    </Compile>
     <Compile Include="Lead\resi_Lead.cs" />
     <Compile Include="Opportunity\resi_Opportunity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

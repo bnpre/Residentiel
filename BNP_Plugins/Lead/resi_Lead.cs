@@ -8,6 +8,7 @@
 ////-------------------------------------------------------------------------------------------------------------------------------
 namespace BNP_Plugins
 {
+	using BNP_Model.Utils;
 	using Microsoft.Crm.Sdk.Messages;
 	using Microsoft.Xrm.Sdk;
 	using Microsoft.Xrm.Sdk.Query;
@@ -86,8 +87,6 @@ namespace BNP_Plugins
 					transmiterSystemId = transmiterSystemId.Trim();
 					string errorMessage = string.Empty;
 					EntityReference leadParentContact = null;
-					EntityReference zoneDeChalandiseOfRelatedOpportunity = null;
-					EntityReference ownerOfRelatedOpportunity = null;
 					iTracingService.Trace("Attributes fetched from Context.");
 					#endregion
 
@@ -102,22 +101,22 @@ namespace BNP_Plugins
 						#region Update the field "Regle De Dispatch Type" on Lead entity with the value in the field "Regle De Dispatch Type" fetched "Parametre" entity.
 						iTracingService.Trace("Fetching Regle De Dispatch from Parametre entity");
 						// Fetch "Paramètres" entity records 
-						QueryExpression parametreQueryExpression = new QueryExpression("resi_parametre");
-						parametreQueryExpression.ColumnSet = new ColumnSet("resi_reglededispatchtype");
+						QueryExpression parametreQueryExpression = new QueryExpression("core_parametre");
+						parametreQueryExpression.ColumnSet = new ColumnSet("core_reglededispatchtype");
 						if (string.IsNullOrWhiteSpace(origine) == false)
 						{
 							iTracingService.Trace("origineType int value changed");
-							parametreQueryExpression.Criteria.AddCondition("resi_origine", ConditionOperator.Equal, origine);
+							parametreQueryExpression.Criteria.AddCondition("core_origine", ConditionOperator.Equal, origine);
 						}
 						if (string.IsNullOrWhiteSpace(lignage) == false)
 						{
 							iTracingService.Trace("lignage is not null");
-							parametreQueryExpression.Criteria.AddCondition("resi_lignage", ConditionOperator.Equal, lignage);
+							parametreQueryExpression.Criteria.AddCondition("core_lignage", ConditionOperator.Equal, lignage);
 						}
 						if (string.IsNullOrWhiteSpace(transmiterSystemId) == false)
 						{
 							iTracingService.Trace("transmiterSystemId is not null");
-							parametreQueryExpression.Criteria.AddCondition("resi_transmitersystemid", ConditionOperator.Equal, transmiterSystemId);
+							parametreQueryExpression.Criteria.AddCondition("core_transmitersystemid", ConditionOperator.Equal, transmiterSystemId);
 						}
 						EntityCollection parametreEntityCollection = iOrganizationService.RetrieveMultiple(parametreQueryExpression);
 
@@ -125,10 +124,10 @@ namespace BNP_Plugins
 
 						if (parametreEntityCollection.Entities.Count > 0)
 						{
-							OptionSetValue regleDeDispatchType = CRMData.GetAttributeValue<OptionSetValue>(parametreEntityCollection.Entities[0], null, "resi_reglededispatchtype");
-							iTracingService.Trace("Regle De Dispatch Type = {0}", regleDeDispatchType.Value);
+							OptionSetValue regleDeDispatchType = CRMData.GetAttributeValue<OptionSetValue>(parametreEntityCollection.Entities[0], null, "core_reglededispatchtype");
 							if (regleDeDispatchType != null)
 							{
+								iTracingService.Trace("Regle De Dispatch Type = {0}", regleDeDispatchType.Value);
 								iTracingService.Trace("regleDeDispatchType is not null");
 								CRMData.AddAttribute<OptionSetValue>(lead, "resi_reglesdedispatchtype", regleDeDispatchType);
 								iTracingService.Trace("regleDeDispatchType updated");
@@ -774,6 +773,7 @@ namespace BNP_Plugins
 									QualifyLeadAndUpdateOpportunity(lead,
 																									zoneDeChalandise,
 																									ownerOpportunity,
+																									false,
 																									iOrganizationService,
 																									iTracingService);
 								}
@@ -852,6 +852,12 @@ namespace BNP_Plugins
 				PreLeadCreate.ReplaceWithBlankIfStringContainsNull(ref leadPostalCode);
 				string leadVendorId = CRMData.GetAttributeValue<string>(lead, null, "resi_vendorbddfid");
 				bool isZoneFound = false;
+				bool isContactToCreateOnLeadQualify = false;
+
+				if (isNewContact == false)
+				{
+					isContactToCreateOnLeadQualify = true;
+				}
 
 
 				#region reglesDeDispatch == 3 (Code Agence)
@@ -873,7 +879,7 @@ namespace BNP_Plugins
 						accountQueryExpression.Criteria.AddCondition("accountnumber", ConditionOperator.Equal, codeDeAgenceDuClient);
 						EntityCollection accountEntityCollection = iOrganizationService.RetrieveMultiple(accountQueryExpression);
 
-						iTracingService.Trace("retrieved Related Opportunity = {0} records", accountEntityCollection.Entities.Count);
+						iTracingService.Trace("retrieved accounts = {0} records", accountEntityCollection.Entities.Count);
 
 						if (accountEntityCollection.Entities.Count > 0)
 						{
@@ -951,6 +957,14 @@ namespace BNP_Plugins
 																															leadCity,
 																															iOrganizationService,
 																															iTracingService);
+
+									#region Updating Lead with Parentcontact 
+									Entity leadEntity = new Entity(lead.LogicalName);
+									leadEntity.Id = lead.Id;
+									CRMData.AddAttribute<EntityReference>(leadEntity, "parentcontactid", newContact);
+									iOrganizationService.Update(leadEntity);
+									#endregion
+
 									account = accountEntityCollection.Entities[0];
 									QualifyLeadAndUpdateOpportunityParentContact(lead, newContact, account, iOrganizationService, iTracingService);
 									#endregion
@@ -1024,6 +1038,7 @@ namespace BNP_Plugins
 										QualifyLeadAndUpdateOpportunity(lead,
 																										zoneDeChalandise,
 																										zoneDeChalandiseOwner,
+																										isContactToCreateOnLeadQualify,
 																										iOrganizationService,
 																										iTracingService);
 									}
@@ -1034,35 +1049,46 @@ namespace BNP_Plugins
 
 					if (isZoneFound == false)
 					{
-						Guid teamSansCPId = new Guid("D0FD6D90-07F4-E611-8113-3863BB350E28");//Team Sans CP 
-						EntityReference teamSansCP = new EntityReference("team", teamSansCPId);
+						// Fetch "Team" entity record for team "Team Sans CP "
+						QueryExpression teamQueryExpression = new QueryExpression("team");
+						teamQueryExpression.ColumnSet = new ColumnSet("teamid");
+						teamQueryExpression.Criteria.AddCondition("name", ConditionOperator.Equal, "Team Sans CP");
+						EntityCollection teamnEntityCollection = iOrganizationService.RetrieveMultiple(teamQueryExpression);
 
-						// Fetch "Zone De Chalandise" entity record where owner = Teams Sans CP 
-						QueryExpression zoneDeChalandiseQueryExpression = new QueryExpression("resi_salesarea");
-						zoneDeChalandiseQueryExpression.ColumnSet = new ColumnSet("resi_salesareaid", "ownerid");
-						zoneDeChalandiseQueryExpression.Criteria.AddCondition("ownerid", ConditionOperator.Equal, teamSansCP.Id);
-						EntityCollection zoneDeChalandiseEntityCollection = iOrganizationService.RetrieveMultiple(zoneDeChalandiseQueryExpression);
-
-						iTracingService.Trace("retrieved zoneDeChalandise = {0} records", zoneDeChalandiseEntityCollection.Entities.Count);
-
-						if (zoneDeChalandiseEntityCollection.Entities.Count > 0)
+						if (teamnEntityCollection.Entities.Count > 0)
 						{
-							iTracingService.Trace("zoneDeChalandiseEntityCollection fetched");
-							zoneDeChalandiseId = CRMData.GetAttributeValue<Guid>(zoneDeChalandiseEntityCollection.Entities[0], null, "resi_salesareaid");
-							zoneDeChalandiseOwner = CRMData.GetAttributeValue<EntityReference>(zoneDeChalandiseEntityCollection.Entities[0], null, "ownerid");
-							if (zoneDeChalandiseId != Guid.Empty && zoneDeChalandiseOwner != null)
+							iTracingService.Trace("teamnEntityCollection.Entities.Count:{0}", teamnEntityCollection.Entities.Count);
+							Guid teamSansCPId = CRMData.GetAttributeValue<Guid>(teamnEntityCollection.Entities[0], null, "teamid");
+							iTracingService.Trace("teamSansCPId:{0}", teamSansCPId.ToString());
+
+							// Fetch "Zone De Chalandise" entity record where owner = Teams Sans CP 
+							QueryExpression zoneDeChalandiseQueryExpression = new QueryExpression("resi_salesarea");
+							zoneDeChalandiseQueryExpression.ColumnSet = new ColumnSet("resi_salesareaid", "ownerid");
+							zoneDeChalandiseQueryExpression.Criteria.AddCondition("ownerid", ConditionOperator.Equal, teamSansCPId);
+							EntityCollection zoneDeChalandiseEntityCollection = iOrganizationService.RetrieveMultiple(zoneDeChalandiseQueryExpression);
+
+							iTracingService.Trace("retrieved zoneDeChalandise = {0} records", zoneDeChalandiseEntityCollection.Entities.Count);
+
+							if (zoneDeChalandiseEntityCollection.Entities.Count > 0)
 							{
-								iTracingService.Trace("zoneDeChalandiseId and zoneDeChalandiseOwner is not null");
-								zoneDeChalandise = new EntityReference("resi_salesarea", zoneDeChalandiseId);
-								if (zoneDeChalandise != null)
+								iTracingService.Trace("zoneDeChalandiseEntityCollection fetched");
+								zoneDeChalandiseId = CRMData.GetAttributeValue<Guid>(zoneDeChalandiseEntityCollection.Entities[0], null, "resi_salesareaid");
+								zoneDeChalandiseOwner = CRMData.GetAttributeValue<EntityReference>(zoneDeChalandiseEntityCollection.Entities[0], null, "ownerid");
+								if (zoneDeChalandiseId != Guid.Empty && zoneDeChalandiseOwner != null)
 								{
-									iTracingService.Trace("zoneDeChalandise is not null");
-									iTracingService.Trace("Calling method QualifyLeadAndUpdateOpportunity");
-									QualifyLeadAndUpdateOpportunity(lead,
-																									zoneDeChalandise,
-																									zoneDeChalandiseOwner,
-																									iOrganizationService,
-																									iTracingService);
+									iTracingService.Trace("zoneDeChalandiseId and zoneDeChalandiseOwner is not null");
+									zoneDeChalandise = new EntityReference("resi_salesarea", zoneDeChalandiseId);
+									if (zoneDeChalandise != null)
+									{
+										iTracingService.Trace("zoneDeChalandise is not null");
+										iTracingService.Trace("Calling method QualifyLeadAndUpdateOpportunity");
+										QualifyLeadAndUpdateOpportunity(lead,
+																										zoneDeChalandise,
+																										zoneDeChalandiseOwner,
+																										isContactToCreateOnLeadQualify,
+																										iOrganizationService,
+																										iTracingService);
+									}
 								}
 							}
 						}
@@ -1106,6 +1132,7 @@ namespace BNP_Plugins
 										QualifyLeadAndUpdateOpportunity(lead,
 																										zoneDeChalandise,
 																										zoneDeChalandiseOwner,
+																										isContactToCreateOnLeadQualify,
 																										iOrganizationService,
 																										iTracingService);
 									}
@@ -1116,35 +1143,47 @@ namespace BNP_Plugins
 
 					if (isZoneFound == false)
 					{
-						Guid teamSansProgrammeId = new Guid("01940A8E-0AF4-E611-8113-3863BB350E28");//Team Sans Programme 
-						EntityReference teamSansProgramme = new EntityReference("team", teamSansProgrammeId);
 
-						// Fetch "Zone De Chalandise" entity record where owner = Teams Sans Programme 
-						QueryExpression zoneDeChalandiseQueryExpression = new QueryExpression("resi_salesarea");
-						zoneDeChalandiseQueryExpression.ColumnSet = new ColumnSet("resi_salesareaid", "ownerid");
-						zoneDeChalandiseQueryExpression.Criteria.AddCondition("ownerid", ConditionOperator.Equal, teamSansProgramme.Id);
-						EntityCollection zoneDeChalandiseEntityCollection = iOrganizationService.RetrieveMultiple(zoneDeChalandiseQueryExpression);
+						// Fetch "Team" entity record for team "Team Sans Programme "
+						QueryExpression teamQueryExpression = new QueryExpression("team");
+						teamQueryExpression.ColumnSet = new ColumnSet("teamid");
+						teamQueryExpression.Criteria.AddCondition("name", ConditionOperator.Equal, "Team Sans Programme");
+						EntityCollection teamnEntityCollection = iOrganizationService.RetrieveMultiple(teamQueryExpression);
 
-						iTracingService.Trace("retrieved zoneDeChalandise = {0} records", zoneDeChalandiseEntityCollection.Entities.Count);
-
-						if (zoneDeChalandiseEntityCollection.Entities.Count > 0)
+						if (teamnEntityCollection.Entities.Count > 0)
 						{
-							iTracingService.Trace("zoneDeChalandiseEntityCollection fetched");
-							zoneDeChalandiseId = CRMData.GetAttributeValue<Guid>(zoneDeChalandiseEntityCollection.Entities[0], null, "resi_salesareaid");
-							zoneDeChalandiseOwner = CRMData.GetAttributeValue<EntityReference>(zoneDeChalandiseEntityCollection.Entities[0], null, "ownerid");
-							if (zoneDeChalandiseId != Guid.Empty && zoneDeChalandiseOwner != null)
+							iTracingService.Trace("teamnEntityCollection.Entities.Count:{0}", teamnEntityCollection.Entities.Count);
+							Guid teamSansProgrammeId = CRMData.GetAttributeValue<Guid>(teamnEntityCollection.Entities[0], null, "teamid");
+							iTracingService.Trace("teamSansCPId:{0}", teamSansProgrammeId.ToString());
+
+							// Fetch "Zone De Chalandise" entity record where owner = Teams Sans Programme 
+							QueryExpression zoneDeChalandiseQueryExpression = new QueryExpression("resi_salesarea");
+							zoneDeChalandiseQueryExpression.ColumnSet = new ColumnSet("resi_salesareaid", "ownerid");
+							zoneDeChalandiseQueryExpression.Criteria.AddCondition("ownerid", ConditionOperator.Equal, teamSansProgrammeId);
+							EntityCollection zoneDeChalandiseEntityCollection = iOrganizationService.RetrieveMultiple(zoneDeChalandiseQueryExpression);
+
+							iTracingService.Trace("retrieved zoneDeChalandise = {0} records", zoneDeChalandiseEntityCollection.Entities.Count);
+
+							if (zoneDeChalandiseEntityCollection.Entities.Count > 0)
 							{
-								iTracingService.Trace("zoneDeChalandiseId and zoneDeChalandiseOwner is not null");
-								zoneDeChalandise = new EntityReference("resi_salesarea", zoneDeChalandiseId);
-								if (zoneDeChalandise != null)
+								iTracingService.Trace("zoneDeChalandiseEntityCollection fetched");
+								zoneDeChalandiseId = CRMData.GetAttributeValue<Guid>(zoneDeChalandiseEntityCollection.Entities[0], null, "resi_salesareaid");
+								zoneDeChalandiseOwner = CRMData.GetAttributeValue<EntityReference>(zoneDeChalandiseEntityCollection.Entities[0], null, "ownerid");
+								if (zoneDeChalandiseId != Guid.Empty && zoneDeChalandiseOwner != null)
 								{
-									iTracingService.Trace("zoneDeChalandise is not null");
-									iTracingService.Trace("Calling method QualifyLeadAndUpdateOpportunity");
-									QualifyLeadAndUpdateOpportunity(lead,
-																									zoneDeChalandise,
-																									zoneDeChalandiseOwner,
-																									iOrganizationService,
-																									iTracingService);
+									iTracingService.Trace("zoneDeChalandiseId and zoneDeChalandiseOwner is not null");
+									zoneDeChalandise = new EntityReference("resi_salesarea", zoneDeChalandiseId);
+									if (zoneDeChalandise != null)
+									{
+										iTracingService.Trace("zoneDeChalandise is not null");
+										iTracingService.Trace("Calling method QualifyLeadAndUpdateOpportunity");
+										QualifyLeadAndUpdateOpportunity(lead,
+																										zoneDeChalandise,
+																										zoneDeChalandiseOwner,
+																										isContactToCreateOnLeadQualify,
+																										iOrganizationService,
+																										iTracingService);
+									}
 								}
 							}
 						}
@@ -1160,6 +1199,7 @@ namespace BNP_Plugins
 		public static void QualifyLeadAndUpdateOpportunity(Entity lead,
 																								 EntityReference zoneDeChalandise,
 																								 EntityReference owner,
+																								 bool isContactToCreateOnLeadQualify,
 																								 IOrganizationService iOrganizationService,
 																								 ITracingService iTracingService)
 		{
@@ -1173,7 +1213,7 @@ namespace BNP_Plugins
 				var qualifyLead = new QualifyLeadRequest
 				{
 					CreateAccount = true,
-					CreateContact = false,
+					CreateContact = isContactToCreateOnLeadQualify,
 					CreateOpportunity = true,
 					LeadId = new EntityReference(lead.LogicalName, lead.Id),
 					Status = new OptionSetValue(3)
@@ -1426,8 +1466,6 @@ namespace BNP_Plugins
 			iTracingService.Trace("Plugin entered");
 			try
 			{
-				//if (CRMData.ValidateTargetAsEntityReference("LeadId", iPluginExecutionContext))
-				//{
 				EntityReference leadId = (EntityReference)iPluginExecutionContext.InputParameters["LeadId"];
 				iTracingService.Trace("leadId fetched from Input Parameters of Context");
 
@@ -1449,7 +1487,6 @@ namespace BNP_Plugins
 						iTracingService.Trace("Set the creation of contact on lead qualify to false");
 					}
 				}
-				//}
 			}
 			catch (FaultException<OrganizationServiceFault> ex)
 			{

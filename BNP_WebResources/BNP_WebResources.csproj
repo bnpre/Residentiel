@@ -67,6 +67,8 @@
     <Content Include="IMG\resiDeadline.png" />
     <Content Include="IMG\resiDetails.png" />
     <Content Include="IMG\residevis.png" />
+    <Content Include="IMG\resiDocuSign16.png" />
+    <Content Include="IMG\resiDocuSign32.png" />
     <Content Include="IMG\resiDollar.png" />
     <Content Include="IMG\resiEchéanciers16.png" />
     <Content Include="IMG\resiEchéanciers32.png" />

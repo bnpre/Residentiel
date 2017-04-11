@@ -44,10 +44,6 @@
     <AssemblyOriginatorKeyFile>BNP_Workflows.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=8.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
@@ -91,7 +87,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="BNP_Workflows.snk" />
-    <None Include="packages.config" />
     <None Include="Service References\GestcomWebService\BNP_Workflows.GestcomWebService.wsResiDispatcherOpResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>

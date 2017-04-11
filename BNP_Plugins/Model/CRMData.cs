@@ -165,26 +165,26 @@ namespace BNP_Plugins
       return col;
     }
 
-    /// <summary>
-    /// Gets the entity record by unique identifier.
-    /// </summary>
-    /// <param name="entityName">Name of the entity.</param>
-    /// <param name="guid">The unique identifier.</param>
-    /// <param name="attributesNames">Name of the attributes.</param>
-    /// <returns>
-    /// Returns Entity Record
-    /// </returns>
-    public Entity GetEntityRecordByGuid(string entityName, Guid guid, params string[] attributesNames)
-    {
-      return this.crmService.Retrieve(entityName, guid, new ColumnSet(attributesNames));
-    }
+		/// <summary>
+		/// Gets the entity record by unique identifier.
+		/// </summary>
+		/// <param name="entityName">Name of the entity.</param>
+		/// <param name="guid">The unique identifier.</param>
+		/// <param name="attributesNames">Name of the attributes.</param>
+		/// <returns>
+		/// Returns Entity Record
+		/// </returns>
+		public static Entity GetEntityRecordByGuid(IOrganizationService crmService, string entityName, Guid guid, params string[] attributesNames)
+		{
+			return crmService.Retrieve(entityName, guid, new ColumnSet(attributesNames));
+		}
 
-    /// <summary>
-    /// Creates the entity record.
-    /// </summary>
-    /// <param name="entity">The entity.</param>
-    /// <returns>Return Guid</returns>
-    public Guid CreateEntityRecord(Entity entity)
+		/// <summary>
+		/// Creates the entity record.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		/// <returns>Return Guid</returns>
+		public Guid CreateEntityRecord(Entity entity)
     {
       return this.crmService.Create(entity);
     }
@@ -743,6 +743,34 @@ namespace BNP_Plugins
 
       return attributeValue;
     }
-    #endregion
-  }
+		#endregion
+
+		#region GetFormattedAttributeValue
+		/// <summary>
+		/// Get the formatted attribute value from specified entity.
+		/// </summary>
+		/// <param name="entity">Entity for get attribute formatted value.</param>
+		/// <param name="entityImage">EntityImage for get attribute formatted value.</param>
+		/// <returns>string</returns>
+		public static String GetFormattedAttributeValue(Entity entity,
+																										Entity entityImage,
+																										String attributeName)
+		{
+			string formattedAttributeValue = string.Empty;
+
+			try
+			{
+				if (entity != null &&
+						entity.FormattedValues.Contains(attributeName))
+				{ formattedAttributeValue = entity.FormattedValues[attributeName]; }
+				else if (entityImage != null &&
+								 entityImage.FormattedValues.Contains(attributeName))
+				{ formattedAttributeValue = entityImage.FormattedValues[attributeName]; }
+			}
+			catch { } //It will return default.
+
+			return formattedAttributeValue;
+		}
+		#endregion
+	}
 }

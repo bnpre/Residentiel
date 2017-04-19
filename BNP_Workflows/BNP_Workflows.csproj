@@ -72,6 +72,7 @@
     <Compile Include="Contrat\CancelContrat.cs" />
     <Compile Include="Contrat\GenerateContractXML.cs" />
     <Compile Include="Contrat\SetWordTemplate.cs" />
+    <Compile Include="Mapping Programme Document\SetDocumentTemplateId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\Definitions\Contrat.cs" />
     <Compile Include="Service References\GestcomWebService\Reference.cs">

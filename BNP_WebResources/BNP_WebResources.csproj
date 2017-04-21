@@ -67,6 +67,8 @@
     <Content Include="IMG\resiDeadline.png" />
     <Content Include="IMG\resiDetails.png" />
     <Content Include="IMG\residevis.png" />
+    <Content Include="IMG\resiDocumentRepository16.png" />
+    <Content Include="IMG\resiDocumentRepository32.png" />
     <Content Include="IMG\resiDocuSign16.png" />
     <Content Include="IMG\resiDocuSign32.png" />
     <Content Include="IMG\resiDollar.png" />
@@ -83,6 +85,8 @@
     <Content Include="IMG\resiinterlocuteur.png" />
     <Content Include="IMG\resiliens.png" />
     <Content Include="IMG\resiloader.gif" />
+    <Content Include="IMG\resiMapping16.png" />
+    <Content Include="IMG\resiMapping32.png" />
     <Content Include="IMG\resiMentoring.png" />
     <Content Include="IMG\resiopportunitysection.png" />
     <Content Include="IMG\resiPostalCode16.png" />
@@ -108,6 +112,7 @@
     <Content Include="JS\resi_InsertColumnIcons.js" />
     <Content Include="JS\resi_jquery.js" />
     <Content Include="JS\resi_Opportunity.js" />
+    <Content Include="JS\resi_Programme.js" />
     <Content Include="JS\resi_SDK.Soap.vsdoc.min.js" />
     <Content Include="JS\Sdk.ExecuteWorkflow.js" />
   </ItemGroup>

@@ -7,33 +7,24 @@ PackageContrat.Contrat = {
 	// Il s'agit de la fonction pour résoudre le Contrat 
 	onClickCloseButton: function () {//PackageContrat.Contrat.onClickCloseButton
 		var actionName = "resi_CancelContrat";
-		var recordId = Xrm.Page.data.entity.getId();
-		recordId = removeCurlyBraceFromGuid(recordId);
 		var serverURL = Xrm.Page.context.getClientUrl();
-
-		var xmlHttpRequest = new XMLHttpRequest();
-		xmlHttpRequest.open("POST", serverURL + "/api/data/v8.2/resi_contrats(" + recordId + ")/Microsoft.Dynamics.CRM." + actionName, false);
-		xmlHttpRequest.setRequestHeader("Accept", "application/json");
-		xmlHttpRequest.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-		xmlHttpRequest.setRequestHeader("OData-MaxVersion", "4.0");
-		xmlHttpRequest.setRequestHeader("OData-Version", "4.0");
-		xmlHttpRequest.onreadystatechange = function () {
-			if (this.readyState == 4 /* complete */) {
-				xmlHttpRequest.onreadystatechange = null;
-				if (this.status == 200 ||
-						this.status == 204) {
-					alert("Contrat annulé avec succès");//Contrat Cancelled successfully.
-					//Reload the form.
-					var recordEntityName = Xrm.Page.data.entity.getEntityName();
-					Xrm.Utility.openEntityForm(recordEntityName, recordId);
-				}
-				else {
-					var error = JSON.parse(this.response).error;
-					alert(error.message);
-				}
-			}
-		};
-		xmlHttpRequest.send();
+		var recordEntityName = Xrm.Page.data.entity.getEntityName();
+		var recordId = Xrm.Page.data.entity.getId();
+		Process.callAction(actionName, [{
+			key: "Target",
+			type: Process.Type.EntityReference,
+			value: { id: recordId, entityType: recordEntityName }
+		}],
+							function (response) {
+								alert("Contrat annulé avec succès");//Contrat Cancelled successfully.
+								//Reload the form.
+								Xrm.Utility.openEntityForm(recordEntityName, recordId);
+							},
+							function (error) {
+								alert("Error executing action : " + error);
+							},
+							serverURL
+						);
 	},
 
 	//Il s'agit d'une fonction pour créer un contrat xml
@@ -70,36 +61,24 @@ PackageContrat.Contrat = {
 
 	//Il s'agit d'une fonction appelant le workflow pour générer le mot document
 	onClickGenerateDocumentButton: function () {//PackageContrat.Contrat.onClickGenerateDocumentButton
-		var recordId = Xrm.Page.data.entity.getId();
-		recordId = removeCurlyBraceFromGuid(recordId);
-		//var workflowId = "3C0BA9DC-131F-4D83-9B6D-5E5241EF8AFE";//Workflow: Generate and attach Contrat document
-		//startWorkflow(recordId, workflowId);
-
 		var actionName = "resi_SetContratDocumentTemplate";
 		var serverURL = Xrm.Page.context.getClientUrl();
-
-		var xmlHttpRequest = new XMLHttpRequest();
-		xmlHttpRequest.open("POST", serverURL + "/api/data/v8.2/resi_contrats(" + recordId + ")/Microsoft.Dynamics.CRM." + actionName, false);
-		xmlHttpRequest.setRequestHeader("Accept", "application/json");
-		xmlHttpRequest.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-		xmlHttpRequest.setRequestHeader("OData-MaxVersion", "4.0");
-		xmlHttpRequest.setRequestHeader("OData-Version", "4.0");
-		xmlHttpRequest.onreadystatechange = function () {
-			if (this.readyState == 4 /* complete */) {
-				xmlHttpRequest.onreadystatechange = null;
-				if (this.status == 200 ||
-						this.status == 204) {
-					//Reload the form.
-					var recordEntityName = Xrm.Page.data.entity.getEntityName();
-					Xrm.Utility.openEntityForm(recordEntityName, recordId);
-				}
-				else {
-					var error = JSON.parse(this.response).error;
-					alert(error.message);
-				}
-			}
-		};
-		xmlHttpRequest.send();
+		var recordEntityName = Xrm.Page.data.entity.getEntityName();
+		var recordId = Xrm.Page.data.entity.getId();
+		Process.callAction(actionName, [{
+			key: "Target",
+			type: Process.Type.EntityReference,
+			value: { id: recordId, entityType: recordEntityName }
+		}],
+							function (response) {
+								//Reload the form.
+								Xrm.Utility.openEntityForm(recordEntityName, recordId);
+							},
+							function (error) {
+								alert("Error executing action : " + error);
+							},
+							serverURL
+						);
 	},
 
 	//C'est une fonction à exécuter sur le clic du bouton docusign

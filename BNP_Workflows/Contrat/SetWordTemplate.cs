@@ -52,7 +52,16 @@ namespace BNP_Workflows
 					if (string.IsNullOrWhiteSpace(documentTemplateId) == false)
 					{
 						tracingService.Trace("documentTemplateId != null");
+						try
+						{
+							service.Retrieve("documenttemplate", new Guid(documentTemplateId), new ColumnSet(true));
+						}
+						catch (Exception ex)
+						{
+							throw new ArgumentException("Document Template with GUID:{0} does not exist in CRM.", documentTemplateId);
+						}
 
+						tracingService.Trace("documentTemplateDocumentEntityCollection.Entities.Count > 0");
 						#region Create XAML
 
 						// Define the workflow XAML.

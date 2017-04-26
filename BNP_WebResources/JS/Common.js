@@ -17,6 +17,37 @@ function setAttributeValue(attributeName, attributeValue) {
 	}
 }
 
+//Set the attribute value for specified attribute from form.
+function setLookupAttributeValue(attributeName, recordId, recordName, entityName) {
+	var attribute = Xrm.Page.getAttribute(attributeName);
+	if (attribute != null) {
+		var attributeValue = new Array();
+		attributeValue[0] = new Object();
+		attributeValue[0].id = recordId;
+		attributeValue[0].name = recordName;
+		attributeValue[0].entityType = entityName;
+		attribute.setValue(attributeValue);
+	}
+}
+
+//Get the attribute value for specified attribute from form.
+function getLookupAttributeId(attributeName) {
+	var attributeId = null;
+	var attributeValue = getAttributeValue(attributeName);
+	if (attributeValue != null) {
+		attributeId = attributeValue[0].id;
+	}
+	return attributeId;
+}
+
+function getSdkCallFieldValue(entity, fieldName) {
+	var returnValue = "";
+	try {
+		returnValue = entity.getValue(fieldName);
+	}
+	catch (e) { }
+	return returnValue;
+}
 
 //To remove the curly braces from the GUID.
 function removeCurlyBraceFromGuid(guid) {

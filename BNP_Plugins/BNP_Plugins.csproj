@@ -66,6 +66,7 @@
     <Compile Include="..\BNP.Model\Utils\CRMData.cs">
       <Link>Model\CRMData.cs</Link>
     </Compile>
+    <Compile Include="Account\resi_Account.cs" />
     <Compile Include="Contrat\resi_Contrat.cs" />
     <Compile Include="Lead\resi_Lead.cs" />
     <Compile Include="Opportunity\resi_Opportunity.cs" />

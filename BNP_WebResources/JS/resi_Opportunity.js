@@ -35,7 +35,6 @@ PackageOpportunity.Opportunity = {
 
 	// Remplir «Agence» sur Prescripteur Change
 	onPrescripteurChange: function () {//PackageOpportunity.Opportunity.onPrescripteurChange
-		debugger;
 		var prescripteurId = getLookupAttributeId("resi_conseillerbddfid");
 		if (prescripteurId != null) {
 			prescripteurId = removeCurlyBraceFromGuid(prescripteurId);
@@ -60,9 +59,15 @@ PackageOpportunity.Opportunity = {
 								parentCustomerId != "") {
 							setLookupAttributeValue("resi_agenceid", parentCustomerId.getId(), parentCustomerId.getName(), parentCustomerId.getType());
 						}
+						else {
+							setAttributeValue("resi_agenceid", null);
+						}
 					}
 				}
 			}
+		}
+		else {
+			setAttributeValue("resi_agenceid", null);
 		}
 	},
 }

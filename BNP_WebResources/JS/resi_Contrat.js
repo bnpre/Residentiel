@@ -59,7 +59,7 @@ PackageContrat.Contrat = {
 		xmlHttpRequest.send();
 	},
 
-	//Il s'agit d'une fonction appelant le workflow pour générer le mot document
+	//Il s'agit d'une fonction appelant le workflow pour générer le document
 	onClickGenerateDocumentButton: function () {//PackageContrat.Contrat.onClickGenerateDocumentButton
 		var actionName = "resi_SetContratDocumentTemplate";
 		var serverURL = Xrm.Page.context.getClientUrl();
@@ -75,6 +75,24 @@ PackageContrat.Contrat = {
 								Xrm.Utility.openEntityForm(recordEntityName, recordId);
 							},
 							function (error) {
+								alert("Error executing action : " + error);
+							},
+							serverURL
+						);
+	},
+
+	//Il s'agit d'une fonction js appelant le workflow pour générer le mot document au niveau Global
+	onClickGenerateDocumentForContract: function () {//PackageContrat.Contrat.onClickGenerateDocumentForContract
+		var workflowId = "99f3506b-6634-4f3c-802f-389e3a91217c";//Générer le contrat (Global)
+		var serverURL = Xrm.Page.context.getClientUrl();
+		var recordEntityName = Xrm.Page.data.entity.getEntityName();
+		var recordId = Xrm.Page.data.entity.getId();
+		Process.callWorkflow(workflowId, recordId,
+							function () {
+								//Reload the form.
+								Xrm.Utility.openEntityForm(recordEntityName, recordId);
+							},
+							function () {
 								alert("Error executing action : " + error);
 							},
 							serverURL

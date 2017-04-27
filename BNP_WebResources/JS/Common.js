@@ -34,7 +34,8 @@ function setLookupAttributeValue(attributeName, recordId, recordName, entityName
 function getLookupAttributeId(attributeName) {
 	var attributeId = null;
 	var attributeValue = getAttributeValue(attributeName);
-	if (attributeValue != null) {
+	if (attributeValue != null &&
+		attributeValue.length > 0) {
 		attributeId = attributeValue[0].id;
 	}
 	return attributeId;

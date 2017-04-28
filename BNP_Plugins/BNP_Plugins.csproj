@@ -68,6 +68,7 @@
     </Compile>
     <Compile Include="Account\resi_Account.cs" />
     <Compile Include="Contrat\resi_Contrat.cs" />
+    <Compile Include="Echeancier\resi_Echeancier.cs" />
     <Compile Include="Lead\resi_Lead.cs" />
     <Compile Include="Opportunity\resi_Opportunity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

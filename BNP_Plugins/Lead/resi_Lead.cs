@@ -682,7 +682,7 @@ namespace BNP_Plugins
 				iTracingService.Trace("Entity context is not null");
 				iTracingService.Trace("Error Message = {0}", errorMessage);
 				//Updating the field "Message" on Lead entity with the Error Message
-				entity.Attributes.Add("resi_message", errorMessage);
+				CRMData.AddAttribute(entity, "resi_message", errorMessage);
 				iTracingService.Trace("Error Message updated.");
 			}
 		}

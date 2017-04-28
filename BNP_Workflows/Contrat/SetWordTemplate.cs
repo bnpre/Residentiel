@@ -58,7 +58,7 @@ namespace BNP_Workflows
 						}
 						catch (Exception ex)
 						{
-							throw new ArgumentException("Document Template with GUID:{0} does not exist in CRM.", documentTemplateId);
+							throw new InvalidPluginExecutionException(string.Format("Le template dont l'identifiant est : {0} n'a pas été configuré par l'administrateur fonctionnel. Merci d'informer l'administrateur.", documentTemplateId));
 						}
 
 						tracingService.Trace("documentTemplateDocumentEntityCollection.Entities.Count > 0");

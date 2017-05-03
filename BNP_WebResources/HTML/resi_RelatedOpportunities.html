@@ -1,199 +1,200 @@
-﻿<html>
+﻿﻿
+<html>
 <head>
-	<meta charset="utf-8">
-	<title></title>
-	<script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
-	<script src="../../resi_/JS/resi_jquery.js" type="text/javascript"></script>
-	<script src="../../resi_/JS/resi_SDK.Soap.vsdoc.min.js" type="text/javascript"></script>
-	<script src="../../resi_/JS/resi_Sdk.RetrieveMetadataChanges.js" type="text/javascript"></script>
+  <meta charset="utf-8">
+  <title></title>
+  <script src="../../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+  <script src="../../resi_/JS/resi_jquery.js" type="text/javascript"></script>
+  <script src="../../resi_/JS/resi_SDK.Soap.vsdoc.min.js" type="text/javascript"></script>
+  <script src="../../resi_/JS/resi_Sdk.RetrieveMetadataChanges.js" type="text/javascript"></script>
 </head>
 <body style="word-wrap: break-word; -ms-word-wrap: break-word;">
-	<style type="text/css">
-		table {
-			table-layout: fixed;
-			width: 320px;
-			font-size: 11px;
-			font-family: Segoe UI,Tahoma,Arial;
-			border: 1px solid #C60C21;
-			margin-left: 0;
-		}
+  <style type="text/css">
+    table {
+      table-layout: fixed;
+      width: 320px;
+      font-size: 11px;
+      font-family: Segoe UI,Tahoma,Arial;
+      border: 1px solid #C60C21;
+      margin-left: 0;
+    }
 
-		a {
-			text-decoration: none;
-		}
+    a {
+      text-decoration: none;
+    }
 
-		.resi_back {
-			font-weight: 600;
-		}
+    .resi_back {
+      font-weight: 600;
+    }
 
-		td {
-			height: 22px;
-		}
+    td {
+      height: 22px;
+    }
 
-		.resi_td_name {
-			font-size: 13px;
-			font-family: Segoe UI,Tahoma,Arial;
-			font-weight: 600;
-		}
+    .resi_td_name {
+      font-size: 13px;
+      font-family: Segoe UI,Tahoma,Arial;
+      font-weight: 600;
+    }
 
-		ol {
-			margin: 3px 0;
-			padding: 0;
-			list-style-position: inside;
-		}
+    ol {
+      margin: 3px 0;
+      padding: 0;
+      list-style-position: inside;
+    }
 
-		ul {
-			padding: 0;
-			list-style-type: none;
-		}
+    ul {
+      padding: 0;
+      list-style-type: none;
+    }
 
-		.resi_numbering_div {
-			width: 320px;
-			height: 0px;
-		}
+    .resi_numbering_div {
+      width: 320px;
+      height: 0px;
+    }
 
-		.resi_numbering {
-			color: #444444;
-			font-size: 11px;
-			font-family: Segoe UI,Tahoma,Arial;
-		}
+    .resi_numbering {
+      color: #444444;
+      font-size: 11px;
+      font-family: Segoe UI,Tahoma,Arial;
+    }
 
-		.resi_unselected_list {
-			background-color: white;
-		}
+    .resi_unselected_list {
+      background-color: white;
+    }
 
-			.resi_unselected_list table:hover {
-				background-color: #d3d3d3;
-			}
+      .resi_unselected_list table:hover {
+        background-color: #d3d3d3;
+      }
 
-		.resi_back, .resi_next {
-			width: 60px;
-			height: 15px;
-			background-color: #C60C21;
-			padding: 5px;
-			text-align: center;
-			color: white;
-			font-size: 13px;
-		}
-	</style>
+    .resi_back, .resi_next {
+      width: 60px;
+      height: 15px;
+      background-color: #C60C21;
+      padding: 5px;
+      text-align: center;
+      color: white;
+      font-size: 13px;
+    }
+  </style>
 
-	<div id="resi_master_results">
-		<ul id="resi_search_list"></ul>
-		<div class="resi_numbering_div">
-			<div style="float: left;">
-				<span class="resi_numbering"></span>
-			</div>
-			<div style="float: right;">
-				<a class="resi_back" onclick="PackageRelatedOpportunities.RelatedOpportunities.resi_back();" href="#">Précédent</a>
-				<a class="resi_next" onclick="PackageRelatedOpportunities.RelatedOpportunities.resi_next();" href="#">Suivant</a>
-			</div>
-		</div>
-	</div>
-	<script type="text/javascript">
-		debugger;
-		debugger;
-		var startIndex = 0;
-		var result = "";
-		var pageSize = 2;
+  <div id="resi_master_results">
+    <ul id="resi_search_list"></ul>
+    <div class="resi_numbering_div">
+      <div style="float: left;">
+        <span class="resi_numbering"></span>
+      </div>
+      <div style="float: right;">
+        <a class="resi_back" onclick="PackageRelatedOpportunities.RelatedOpportunities.resi_back();" href="#">Précédent</a>
+        <a class="resi_next" onclick="PackageRelatedOpportunities.RelatedOpportunities.resi_next();" href="#">Suivant</a>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    var startIndex = 0;
+    var result = "";
+    var pageSize = 2;
 
-		var totalRecords = 0;
-		var endIndex = pageSize;
+    var totalRecords = 0;
+    var endIndex = pageSize;
 
-		if (typeof (PackageRelatedOpportunities) == "undefined")
-		{ PackageRelatedOpportunities = {}; }
+    if (typeof (PackageRelatedOpportunities) == "undefined")
+    { PackageRelatedOpportunities = {}; }
 
-		//The webresource loading point on form.
-		document.onreadystatechange = function () {
-			//It will indicates that, the webresource is properly loaded.
-			if (document.readyState == "complete") {
-				PackageRelatedOpportunities.RelatedOpportunities.initializeWebResource();
-			}
-		}
+    //The webresource loading point on form.
+    document.onreadystatechange = function () {
+      //It will indicates that, the webresource is properly loaded.
+      if (document.readyState == "complete") {
+        PackageRelatedOpportunities.RelatedOpportunities.initializeWebResource();
+      }
+    }
 
-		PackageRelatedOpportunities.RelatedOpportunities = {
-			//The entry point, this method is called after the webresource is being loaded.
-			initializeWebResource: function () { //PackageRelatedOpportunities.RelatedOpportunities.initializeWebResource
-				//Get the current record Parent Contact id/
-				debugger;
-				var contactOpportunity = window.parent.Xrm.Page.getAttribute("parentcontactid").getValue();
-				if (contactOpportunity != null) {
-					var contactOpportunityId = contactOpportunity[0].id;
-					contactOpportunityId = contactOpportunityId.replace("{", "");
-					contactOpportunityId = contactOpportunityId.replace("}", "");
-					//FetchXML based query to fetch the related opportunities data of the parent contact.
-					var opportunityFetchXML = ["<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>",
-                "<entity name='opportunity'>",
-                  "<attribute name='name' />",
-                  "<attribute name='resi_customer_program' />",
-                  "<attribute name='resi_searchdate' />",
-                  "<attribute name='resi_typologiedelademandetype' />",
-									"<attribute name='statuscode' />",
-                  "<order attribute='resi_searchdate' descending='false' /> ",
-                  "<filter type='and'>",
-                    "<condition attribute='parentcontactid' operator='eq' value='" + contactOpportunityId + "' />",
-                    "<condition attribute='statecode' operator='eq' value='0' />",
-                  "</filter>",
-               "</entity>",
-              "</fetch>"].join("");
+    PackageRelatedOpportunities.RelatedOpportunities = {
+      //The entry point, this method is called after the webresource is being loaded.
+      initializeWebResource: function () { //PackageRelatedOpportunities.RelatedOpportunities.initializeWebResource
+        //Get the current record Parent Contact id/
+        var currentRecordId = window.parent.Xrm.Page.data.entity.getId();
+        currentRecordId = currentRecordId.replace("{", "").replace("}", "");
+        var parentContact = window.parent.Xrm.Page.getAttribute("parentcontactid");
+        if (parentContact != null) {
+          var parentContactValue = parentContact.getValue();
+          if (parentContactValue != null) {
+            var parentContactId = parentContactValue[0].id;
+            parentContactId = parentContactId.replace("{", "").replace("}", "");
+            //FetchXML based query to fetch the related opportunities data of the parent contact.
+            var opportunityFetchXML = ["<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>",
+                  "<entity name='opportunity'>",
+                    "<attribute name='opportunityid' />",
+                    "<attribute name='name' />",
+                    "<attribute name='resi_customer_program' />",
+                    "<attribute name='resi_searchdate' />",
+                    "<attribute name='resi_typologiedelademandetype' />",
+                    "<attribute name='statuscode' />",
+                    "<order attribute='resi_searchdate' descending='false' /> ",
+                    "<filter type='and'>",
+                      "<condition attribute='parentcontactid' operator='eq' value='" + parentContactId + "' />",
+                      "<condition attribute='opportunityid' operator='ne' value='" + currentRecordId + "' />",
+                      "<condition attribute='statecode' operator='eq' value='0' />",
+                    "</filter>",
+                 "</entity>",
+                "</fetch>"].join("");
+            //The execution of above FetchXML query.
+            var opportunityFetchedRecords = new Sdk.Query.FetchExpression(opportunityFetchXML);
+            result = Sdk.Sync.retrieveMultiple(opportunityFetchedRecords);
 
-					//The execution of above FetchXML query.
-					var opportunityFetchedRecords = new Sdk.Query.FetchExpression(opportunityFetchXML);
-					result = Sdk.Sync.retrieveMultiple(opportunityFetchedRecords);
+            //Populate a result into a grid.
+            PackageRelatedOpportunities.RelatedOpportunities.prepareGrid(result);
+          }
+        }
+      },
 
-					//Populate a result into a grid.
-					PackageRelatedOpportunities.RelatedOpportunities.prepareGrid(result);
-				}
-			},
+      //Dynamically populate result into pre defined HTML table (Grid).
+      prepareGrid: function (entityCollection) {//PackageRelatedOpportunities.RelatedOpportunities.prepareGrid
+        //Pick the fetched records from result.
+        var entities = entityCollection.getEntities();
+        if (entities != null) {
+          var typologieDeLaDemandeCollection = PackageRelatedOpportunities.RelatedOpportunities.getOptionSetValues("resi_typologiedelademandetype");
+          var statusCodeOpportunity = PackageRelatedOpportunities.RelatedOpportunities.getOptionSetValues("statuscode");
 
-			//Dynamically populate result into pre defined HTML table (Grid).
-			prepareGrid: function (entityCollection) {//PackageRelatedOpportunities.RelatedOpportunities.prepareGrid
-				//Pick the fetched records from result.
-				var entities = entityCollection.getEntities();
-				if (entities != null) {
-					var typologieDeLaDemandeCollection = PackageRelatedOpportunities.RelatedOpportunities.getOptionSetValues("resi_typologiedelademandetype");
-					var statusCodeOpportunity = PackageRelatedOpportunities.RelatedOpportunities.getOptionSetValues("statuscode");
-
-					//Get total records at very first load
-					if (totalRecords < 1) {
-						totalRecords = entities.getCount();
-					}
-
-
-					if (startIndex < 0)
-					{ startIndex = 0 }
-
-					//Clear the previous list first and then load the new list
-					jQuery("#resi_search_list").empty();
+          //Get total records at very first load
+          if (totalRecords < 1) {
+            totalRecords = entities.getCount();
+          }
 
 
-					//Loop through the records to populate a grid.
-					for (var i = startIndex; i < endIndex && i < totalRecords; i++) {
+          if (startIndex < 0)
+          { startIndex = 0 }
 
+          //Clear the previous list first and then load the new list
+          jQuery("#resi_search_list").empty();
 
-						//Pick a record one by one.
-						var entity = entities.getByIndex(i);
+          //Loop through the records to populate a grid.
+          for (var i = startIndex; i < endIndex && i < totalRecords; i++) {
 
-						//Gets the related fields value from the result.
-						var name = PackageRelatedOpportunities.RelatedOpportunities.getSdkCallFieldValue(entity, "name");
+            //Pick a record one by one.
+            var entity = entities.getByIndex(i);
 
-						var programme = PackageRelatedOpportunities.RelatedOpportunities.getSdkCallFieldValue(entity, "resi_customer_program");
+            //Gets the related fields value from the result.
+            var name = PackageRelatedOpportunities.RelatedOpportunities.getSdkCallFieldValue(entity, "name");
 
-						if (programme != null && programme != "")
-							programme = programme.getName();
+            var programme = PackageRelatedOpportunities.RelatedOpportunities.getSdkCallFieldValue(entity, "resi_customer_program");
 
-						var dateDeLaRecherche = PackageRelatedOpportunities.RelatedOpportunities.getSdkCallFieldValue(entity, "resi_searchdate");
-						if (dateDeLaRecherche != null && dateDeLaRecherche != "")
-							dateDeLaRecherche = PackageRelatedOpportunities.RelatedOpportunities.getFormattedDate(dateDeLaRecherche);
+            if (programme != null && programme != "")
+              programme = programme.getName();
 
-						var typologieDeLaDemande = PackageRelatedOpportunities.RelatedOpportunities.getSdkCallFieldValue(entity, "resi_typologiedelademandetype");
-						if (typologieDeLaDemande != null && typologieDeLaDemande != "")
-							typologieDeLaDemande = PackageRelatedOpportunities.RelatedOpportunities.getOptionSetItemTextFromOptionSet(typologieDeLaDemande, typologieDeLaDemandeCollection);
-						debugger;
-						var statut = PackageRelatedOpportunities.RelatedOpportunities.getSdkCallFieldValue(entity, "statuscode");
+            var dateDeLaRecherche = PackageRelatedOpportunities.RelatedOpportunities.getSdkCallFieldValue(entity, "resi_searchdate");
+            if (dateDeLaRecherche != null && dateDeLaRecherche != "")
+              dateDeLaRecherche = PackageRelatedOpportunities.RelatedOpportunities.getFormattedDate(dateDeLaRecherche);
 
-						statut = PackageRelatedOpportunities.RelatedOpportunities.getOptionSetItemTextFromOptionSet(statut, statusCodeOpportunity);
+            var typologieDeLaDemande = PackageRelatedOpportunities.RelatedOpportunities.getSdkCallFieldValue(entity, "resi_typologiedelademandetype");
+            if (typologieDeLaDemande != null && typologieDeLaDemande != "")
+              typologieDeLaDemande = PackageRelatedOpportunities.RelatedOpportunities.getOptionSetItemTextFromOptionSet(typologieDeLaDemande, typologieDeLaDemandeCollection);
+            var statut = PackageRelatedOpportunities.RelatedOpportunities.getSdkCallFieldValue(entity, "statuscode");
 
-						jQuery("#resi_search_list").append('<ol><a href="#" class="resi_unselected_list"><table>' +
+            statut = PackageRelatedOpportunities.RelatedOpportunities.getOptionSetItemTextFromOptionSet(statut, statusCodeOpportunity);
+
+            var currentOpportunityId = PackageRelatedOpportunities.RelatedOpportunities.getSdkCallFieldValue(entity, "opportunityid");
+                jQuery("#resi_search_list").append('<ol onclick="PackageRelatedOpportunities.RelatedOpportunities.openOpportunityRecord(\'' + currentOpportunityId + '\');"><table>' +
                      '<tr>' +
                          '<td width="60px" rowspan="5" style="vertical-align:top"><div style="margin-top:4px;margin-left:4px;vertical-align:middle;height:48px;width:48px;background-color: #C60C21;"><img alt="Client Logo" src="/_imgs/NavBar/ActionImgs/Account_32.png" style="background-color: #C60C21;display:block;margin-left:auto;margin-right:auto;padding-top:7px;"></div></td>' +
                          '<td class="resi_td_name">OPPORTUNITY : <span class="resi_span_text">' + (name ? name : "") + '</span></td>' +
@@ -211,69 +212,76 @@
                          '<td>' + 'STATUT : <span class="resi_span_text">' + (statut ? statut : "") + '</span></td>' +
                      '</tr>' +
                  '</table></a></ol>');
-					}
-				}
-			},
+          }
+        }
+      },
 
-			//This method helps in avoinding the physical crash when the value of fieldName is NULL, instead of NULL here we're passing "" (empty string) to getValue method.
-			getSdkCallFieldValue: function (entity, fieldName) {//PackageRelatedOpportunities.RelatedOpportunities.getSdkCallFieldValue
-				var returnValue = "";
-				try {
-					returnValue = entity.getValue(fieldName);
-				}
-				catch (e) { }
-				return returnValue;
-			},
+      //This method helps in avoinding the physical crash when the value of fieldName is NULL, instead of NULL here we're passing "" (empty string) to getValue method.
+      getSdkCallFieldValue: function (entity, fieldName) {//PackageRelatedOpportunities.RelatedOpportunities.getSdkCallFieldValue
+        var returnValue = "";
+        try {
+          returnValue = entity.getValue(fieldName);
+        }
+        catch (e) { }
+        return returnValue;
+      },
 
-			getOptionSetValues: function (attributeSchemaName) {//PackageRelatedOpportunities.RelatedOpportunities.getOptionSetValues
-				var optionSet = [];
+      openOpportunityRecord: function (recordId) {//PackageRelatedOpportunities.RelatedOpportunities.getSdkCallFieldValue
+        var windowOptions = {
+          openInNewWindow: true
+        };
+        window.parent.Xrm.Utility.openEntityForm("opportunity", recordId, null, windowOptions);
+      },
 
-				var attribute = window.parent.Xrm.Page.getAttribute(attributeSchemaName);
-				if (attribute != null) {
-					optionSet = attribute.getOptions()
-				}
-				return optionSet;
-			},
+      getOptionSetValues: function (attributeSchemaName) {//PackageRelatedOpportunities.RelatedOpportunities.getOptionSetValues
+        var optionSet = [];
 
-			getOptionSetItemTextFromOptionSet: function (optionSetItemValue, optionSet) {//PackageRelatedOpportunities.RelatedOpportunities.getOptionSetItemTextFromOptionSet
-				if (optionSetItemValue != null && optionSet != null) {
-					for (var i = 0; i < optionSet.length; i++) {
-						if (optionSet[i].value == optionSetItemValue) {
-							return optionSet[i].text;
-						}
-					}
-				}
-			},
+        var attribute = window.parent.Xrm.Page.getAttribute(attributeSchemaName);
+        if (attribute != null) {
+          optionSet = attribute.getOptions()
+        }
+        return optionSet;
+      },
 
-			getFormattedDate: function (dateObject) {//PackageRelatedOpportunities.RelatedOpportunities.getFormattedDate
-				var formattedDate = null;
-				if (dateObject != null && dateObject != "") {
-					var myDate = new Date(dateObject);
-					formattedDate = ((myDate.getDate()) + "-" + (myDate.getMonth() + 1) + "-" + (myDate.getFullYear()));
-				}
-				return formattedDate;
-			},
+      getOptionSetItemTextFromOptionSet: function (optionSetItemValue, optionSet) {//PackageRelatedOpportunities.RelatedOpportunities.getOptionSetItemTextFromOptionSet
+        if (optionSetItemValue != null && optionSet != null) {
+          for (var i = 0; i < optionSet.length; i++) {
+            if (optionSet[i].value == optionSetItemValue) {
+              return optionSet[i].text;
+            }
+          }
+        }
+      },
 
-			resi_next: function () {//PackageRelatedOpportunities.RelatedOpportunities.resi_next
-				if (endIndex < totalRecords) {
-					startIndex = startIndex + pageSize;
-					endIndex = endIndex + pageSize;
-				}
-				//Populate a result into a grid.
-				PackageRelatedOpportunities.RelatedOpportunities.prepareGrid(result);
-			},
+      getFormattedDate: function (dateObject) {//PackageRelatedOpportunities.RelatedOpportunities.getFormattedDate
+        var formattedDate = null;
+        if (dateObject != null && dateObject != "") {
+          var myDate = new Date(dateObject);
+          formattedDate = ((myDate.getDate()) + "-" + (myDate.getMonth() + 1) + "-" + (myDate.getFullYear()));
+        }
+        return formattedDate;
+      },
 
-			resi_back: function () {//PackageRelatedOpportunities.RelatedOpportunities.resi_back
-				if (startIndex > 0) {
-					startIndex = startIndex - pageSize;
-					endIndex = endIndex - pageSize;
-				}
+      resi_next: function () {//PackageRelatedOpportunities.RelatedOpportunities.resi_next
+        if (endIndex < totalRecords) {
+          startIndex = startIndex + pageSize;
+          endIndex = endIndex + pageSize;
+        }
+        //Populate a result into a grid.
+        PackageRelatedOpportunities.RelatedOpportunities.prepareGrid(result);
+      },
 
-				//Populate a result into a grid.
-				PackageRelatedOpportunities.RelatedOpportunities.prepareGrid(result);
-			}
-		}
+      resi_back: function () {//PackageRelatedOpportunities.RelatedOpportunities.resi_back
+        if (startIndex > 0) {
+          startIndex = startIndex - pageSize;
+          endIndex = endIndex - pageSize;
+        }
 
-	</script>
+        //Populate a result into a grid.
+        PackageRelatedOpportunities.RelatedOpportunities.prepareGrid(result);
+      }
+    }
+
+  </script>
 </body>
 </html>

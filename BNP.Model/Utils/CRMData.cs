@@ -393,14 +393,36 @@ namespace BNP_Model.Utils
 			return returnValue;
 		}
 
-		/// <summary>
-		/// Get the option set id as per option set text.
-		/// </summary>
-		/// <param name="iOrganizationService">Organization service for retrive data.</param>
-		/// <param name="optionSetName">Optionset name for get value.</param>
-		/// <param name="optionSetText">Optionset text for get value.</param>
-		/// <returns>Optionset value</returns>
-		public static OptionSetValue GetOptionSetValue(IOrganizationService iOrganizationService,
+    /// <summary>
+    /// Validates that the Target is an EntityReference of the required LogicalName.
+    /// </summary>
+    /// <param name="entityName">The EntityName which is tobe verified as Target EntityReference.</param>
+    /// <param name="pluginExecutionContext">IPluginExecutionContext for validate.</param>
+    /// <returns></returns>
+    public static Boolean ValidateTargetAsEntityReference(String entityName,
+                                                          IPluginExecutionContext pluginExecutionContext)
+    {
+      bool returnValue = false;
+      try
+      {
+        returnValue = (pluginExecutionContext != null &&
+                       pluginExecutionContext.InputParameters.Contains("Target") &&
+                       pluginExecutionContext.InputParameters["Target"] is EntityReference &&
+                       ((EntityReference)pluginExecutionContext.InputParameters["Target"]).LogicalName.Equals(entityName));
+      }
+      catch { } //It will return default value.
+
+      return returnValue;
+    }
+
+    /// <summary>
+    /// Get the option set id as per option set text.
+    /// </summary>
+    /// <param name="iOrganizationService">Organization service for retrive data.</param>
+    /// <param name="optionSetName">Optionset name for get value.</param>
+    /// <param name="optionSetText">Optionset text for get value.</param>
+    /// <returns>Optionset value</returns>
+    public static OptionSetValue GetOptionSetValue(IOrganizationService iOrganizationService,
 																									 String optionSetName,
 																									 String optionSetText)
 		{

@@ -2,6 +2,5 @@ E:\MSCRM\DSeydou Services\BNP Real Estate\Plugins\BNP\BNP.Model\bin\Debug\BNP.Mo
 E:\MSCRM\DSeydou Services\BNP Real Estate\Plugins\BNP\BNP.Model\bin\Debug\BNP.Model.pdb
 E:\MSCRM\DSeydou Services\BNP Real Estate\Plugins\BNP\BNP.Model\bin\Debug\Microsoft.Crm.Sdk.Proxy.dll
 E:\MSCRM\DSeydou Services\BNP Real Estate\Plugins\BNP\BNP.Model\bin\Debug\Microsoft.Xrm.Sdk.dll
-E:\MSCRM\DSeydou Services\BNP Real Estate\Plugins\BNP\BNP.Model\obj\Debug\BNP_Model.csprojResolveAssemblyReference.cache
 E:\MSCRM\DSeydou Services\BNP Real Estate\Plugins\BNP\BNP.Model\obj\Debug\BNP.Model.dll
 E:\MSCRM\DSeydou Services\BNP Real Estate\Plugins\BNP\BNP.Model\obj\Debug\BNP.Model.pdb

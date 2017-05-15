@@ -17,8 +17,9 @@ namespace BNP_Plugins
   /// Echeancier class
   /// </summary>
   /// <seealso cref="Microsoft.Xrm.Sdk.IPlugin" />
-  public class PreEcheancierCreate : IPlugin
+  public class PostEcheancierCreate : IPlugin
   {
+    #region Public Methods
     /// <summary>
     /// Executes plug-in code in response to an event.
     /// </summary>
@@ -26,9 +27,8 @@ namespace BNP_Plugins
     /// <exception cref="InvalidPluginExecutionException">
     /// Invalid 
     /// or
-    /// An error occurred in the PreEcheancierCreate plug-in. + ex.Message
+    /// An error occurred in the PostEcheancierCreate plug-in. + ex.Message
     /// </exception>
-    #region Public Methods
     public void Execute(IServiceProvider serviceProvider)
     {
       // Extract the tracing service for use in debugging sandboxed plug-ins.
@@ -55,10 +55,10 @@ namespace BNP_Plugins
         }
         catch (Exception ex)
         {
-          throw ex;
+          throw new InvalidPluginExecutionException("An error occurred in the PostEcheancierCreate plug-in." + ex.Message);
         }
       }
-      iTracingService.Trace("Plugin execution completed");
+      iTracingService.Trace("PostEcheancierCreate Plugin execution completed");
     }
     #endregion
 
@@ -76,108 +76,106 @@ namespace BNP_Plugins
       iTracingService.Trace("Incoming in method CalculateCumule");
       if ((echeancier != null &&
            (echeancier.Contains("resi_initial") ||
-            echeancier.Contains("resi_adapte"))) ||
+            echeancier.Contains("resi_adapte") ||
+            echeancier.Contains("resi_ordre"))) ||
            isRecordDeleted == true)
       {
-        iTracingService.Trace("echeancier.Contains('resi_initial' || 'resi_adapte')");
+        iTracingService.Trace("echeancier.Contains('resi_initial' || 'resi_adapte' || 'resi_ordre')");
         EntityReference contratEntityReference = CRMData.GetAttributeValue<EntityReference>(echeancier, echeancierImage, "resi_contratid");
         EntityReference programEntityReference = CRMData.GetAttributeValue<EntityReference>(echeancier, echeancierImage, "resi_programmeid");
 
-        string fieldToCalculateSum = string.Empty;
-        decimal? currentValue = null;
-        string fetchXMLCondition = string.Empty;
+        QueryExpression echeancierQueryExpression = new QueryExpression(echeancier.LogicalName);
+        echeancierQueryExpression.ColumnSet = new ColumnSet("resi_echeancierid", "resi_initial", "resi_cumule", "resi_adapte", "createdon");
+        echeancierQueryExpression.AddOrder("resi_ordre", OrderType.Ascending);
 
-        iTracingService.Trace("Getting current changed value from adapte or initial");
+        iTracingService.Trace("Validate contrat entity reference has value or not");
         if (contratEntityReference != null)
         {
-          fieldToCalculateSum = "resi_adapte";
-          currentValue = CRMData.GetAttributeValue<decimal?>(echeancier, null, "resi_adapte");
-          fetchXMLCondition = "<condition attribute='resi_contratid' operator='eq' uiname='' uitype='resi_contrat' value='" + contratEntityReference.Id + @"' />";
-        }
-        else if (programEntityReference != null)
-        {
-          fieldToCalculateSum = "resi_initial";
-          currentValue = CRMData.GetAttributeValue<decimal?>(echeancier, null, "resi_initial");
-          fetchXMLCondition = "<condition attribute='resi_programmeid' operator='eq' uiname='' uitype='resi_programme' value='" + programEntityReference.Id + @"' />";
-        }
-
-        if (currentValue.HasValue ||
-            isRecordDeleted == true)
-        {
-          string echeancierFetchXML = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
-                                          <entity name='resi_echeancier'>
-                                            <attribute name='resi_echeancierid' />
-                                            <attribute name='resi_initial' />
-                                            <attribute name='resi_cumule' />
-                                            <attribute name='resi_adapte' />
-                                            <attribute name='createdon'/>
-                                            <order descending='false' attribute='createdon'/>
-                                            <filter type='and'>
-                                              " + fetchXMLCondition + @" />
-                                              <condition attribute='resi_echeancierid' operator='ne' uiname='' uitype='resi_echeancier' value='" + echeancier.Id + @"' />
-                                            </filter>
-                                          </entity>
-                                        </fetch>";
-
-          //Get all the echeancier based on above fetch xml.
-          FetchExpression echeancierFetchExpression = new FetchExpression(echeancierFetchXML);
-          EntityCollection echeancierEntityCollection = iOrganizationService.RetrieveMultiple(echeancierFetchExpression);
-
-          decimal sumValue = 0;
-
-          foreach (Entity fetchedEcheancier in echeancierEntityCollection.Entities)
-          { sumValue += CRMData.GetAttributeValue<decimal>(fetchedEcheancier, null, fieldToCalculateSum); }
-
-          //Add current value into the sum.
-          sumValue += currentValue.Value;
-
-          //Update the sum value in Cumule%.
-          if (isRecordDeleted == false)
-          { CRMData.AddAttribute<decimal>(echeancier, "resi_cumule", sumValue); }
-
-          bool isSumValue100 = (sumValue == 100);
-
-          //Update the related entity record that indicates the cumule percent is not 100%.
-          if (contratEntityReference != null)
+          if (isRecordUpdated == true || isRecordDeleted == true)
           {
-            Entity updateContrat = new Entity(contratEntityReference.LogicalName);
-            updateContrat.Id = contratEntityReference.Id;
-            CRMData.AddAttribute<bool>(updateContrat, "resi_iscontratvalide", isSumValue100);
-            iOrganizationService.Update(updateContrat);
-          }
-          else if (programEntityReference != null)
-          {
-            Entity updateProgram = new Entity(programEntityReference.LogicalName);
-            updateProgram.Id = programEntityReference.Id;
-            CRMData.AddAttribute<bool>(updateProgram, "resi_allowedsale", isSumValue100);
-            iOrganizationService.Update(updateProgram);
-          }
+            iTracingService.Trace("contratEntityReference != null");
+            echeancierQueryExpression.Criteria.AddCondition("resi_contratid", ConditionOperator.Equal, contratEntityReference.Id);
+            EntityCollection echeancierEntityCollection = iOrganizationService.RetrieveMultiple(echeancierQueryExpression);
 
-          if (contratEntityReference != null &&
-              isRecordUpdated == true)
-          {
             //If value in the image in null in update mode then update all the echeancier adapte value with initial value.
             decimal? adapteOldValue = CRMData.GetAttributeValue<decimal?>(echeancierImage, null, "resi_adapte");
-            if (adapteOldValue.HasValue == false)
+
+            //Update adapte value if user insert/update adapte in any extsing record.
+            if (adapteOldValue == null &&
+                isRecordUpdated == true)
             {
-              decimal cumuleValue = 0;
-              //Update all the values from Initial.
               foreach (Entity fetchedEcheancier in echeancierEntityCollection.Entities)
               {
-                decimal? adapteValue = CRMData.GetAttributeValue<decimal?>(fetchedEcheancier, null, "resi_adapte");
-                if (adapteValue.HasValue == false)
+                //Ignore current record
+                if (fetchedEcheancier.Id != echeancier.Id)
                 {
-                  decimal initalValue = CRMData.GetAttributeValue<decimal>(fetchedEcheancier, null, "resi_initial");
-                  cumuleValue += initalValue;
+                  decimal? initalValue = CRMData.GetAttributeValue<decimal>(fetchedEcheancier, null, "resi_initial");
                   Entity updateEcheancier = new Entity(fetchedEcheancier.LogicalName);
                   updateEcheancier.Id = fetchedEcheancier.Id;
-                  CRMData.AddAttribute<decimal>(updateEcheancier, "resi_adapte", initalValue);
-                  CRMData.AddAttribute<decimal>(updateEcheancier, "resi_cumule", cumuleValue);
+                  CRMData.AddAttribute<decimal?>(updateEcheancier, "resi_adapte", initalValue);
+                  //Update "Adapte" in the current fetched entity collecion in order to avoid another fetch and get the updated "Adapte" in further loops.
+                  CRMData.AddAttribute<decimal?>(fetchedEcheancier, "resi_adapte", initalValue);
                   iOrganizationService.Update(updateEcheancier);
                 }
               }
             }
+
+            decimal cumuleValue = 0;
+            //Update all the values from Adapte.
+            foreach (Entity fetchedEcheancier in echeancierEntityCollection.Entities)
+            {
+              decimal? adapteValue = CRMData.GetAttributeValue<decimal?>(fetchedEcheancier, null, "resi_adapte");
+              if (adapteValue != null)
+              { cumuleValue += adapteValue.Value; }
+              
+              Entity updateEcheancier = new Entity(fetchedEcheancier.LogicalName);
+              updateEcheancier.Id = fetchedEcheancier.Id;
+              CRMData.AddAttribute<decimal?>(updateEcheancier, "resi_cumule", cumuleValue);
+              iOrganizationService.Update(updateEcheancier);
+              iTracingService.Trace("Echeancier cumule updated successfully for contrat");
+            }
+
+            //Deciding the cumumule is 100% or not.
+            bool isCumuleValue100 = (cumuleValue == 100);
+
+            iTracingService.Trace("Updating contrat is valide");
+            Entity updateContrat = new Entity(contratEntityReference.LogicalName);
+            updateContrat.Id = contratEntityReference.Id;
+            CRMData.AddAttribute<bool>(updateContrat, "resi_iscontratvalide", isCumuleValue100);
+            iOrganizationService.Update(updateContrat);
+            iTracingService.Trace("'resi_iscontratvalide' updated successfully");
           }
+        }
+        else if (programEntityReference != null)
+        {
+          iTracingService.Trace("programEntityReference != null");
+          echeancierQueryExpression.Criteria.AddCondition("resi_programmeid", ConditionOperator.Equal, programEntityReference.Id);
+          EntityCollection echeancierEntityCollection = iOrganizationService.RetrieveMultiple(echeancierQueryExpression);
+
+          decimal cumuleValue = 0;
+          //Update all the values from Initial.
+          foreach (Entity fetchedEcheancier in echeancierEntityCollection.Entities)
+          {
+            decimal? initalValue = CRMData.GetAttributeValue<decimal>(fetchedEcheancier, null, "resi_initial");
+            if (initalValue != null)
+            { cumuleValue += initalValue.Value; }
+
+            Entity updateEcheancier = new Entity(fetchedEcheancier.LogicalName);
+            updateEcheancier.Id = fetchedEcheancier.Id;
+            CRMData.AddAttribute<decimal?>(updateEcheancier, "resi_cumule", cumuleValue);
+            iOrganizationService.Update(updateEcheancier);
+            iTracingService.Trace("Echeancier cumule updated successfully for program");
+          }
+
+          //Deciding the cumumule is 100% or not.
+          bool isCumuleValue100 = (cumuleValue == 100);
+
+          iTracingService.Trace("Updating program allowed sale");
+          Entity updateProgram = new Entity(programEntityReference.LogicalName);
+          updateProgram.Id = programEntityReference.Id;
+          CRMData.AddAttribute<bool>(updateProgram, "resi_allowedsale", isCumuleValue100);
+          iOrganizationService.Update(updateProgram);
+          iTracingService.Trace("'resi_allowedsale' updated successfully");
         }
       }
     }
@@ -190,8 +188,9 @@ namespace BNP_Plugins
   /// Echeancier class
   /// </summary>
   /// <seealso cref="Microsoft.Xrm.Sdk.IPlugin" />
-  public class PreEcheancierUpdate : IPlugin
+  public class PostEcheancierUpdate : IPlugin
   {
+    #region Public Methods
     /// <summary>
     /// Executes plug-in code in response to an event.
     /// </summary>
@@ -199,9 +198,8 @@ namespace BNP_Plugins
     /// <exception cref="InvalidPluginExecutionException">
     /// Invalid 
     /// or
-    /// An error occurred in the PreEcheancierCreate plug-in. + ex.Message
+    /// An error occurred in the PostEcheancierUpdate plug-in. + ex.Message
     /// </exception>
-    #region Public Methods
     public void Execute(IServiceProvider serviceProvider)
     {
       // Extract the tracing service for use in debugging sandboxed plug-ins.
@@ -216,7 +214,7 @@ namespace BNP_Plugins
 
       // The InputParameters collection contains all the data passed in the message request.
       if (CRMData.ValidateTargetAsEntity("resi_echeancier", context) &&
-          context.Depth == 1)
+          context.Depth == 1) //This condition in needed to stop infinity.
       {
         try
         {
@@ -224,19 +222,19 @@ namespace BNP_Plugins
           // Obtain the target entity from the input parameters.
           Entity echeancier = (Entity)context.InputParameters["Target"];
           Entity echeancierImage = null;
-          if (context.PreEntityImages.Contains("PreImagePreEcheancierUpdate") &&
-              context.PreEntityImages["PreImagePreEcheancierUpdate"] is Entity)
-          { echeancierImage = (Entity)context.PreEntityImages["PreImagePreEcheancierUpdate"]; }
+          if (context.PreEntityImages.Contains("PreImagePostEcheancierUpdate") &&
+              context.PreEntityImages["PreImagePostEcheancierUpdate"] is Entity)
+          { echeancierImage = (Entity)context.PreEntityImages["PreImagePostEcheancierUpdate"]; }
           iTracingService.Trace("Calling CalculateCumule.");
-          PreEcheancierCreate.CalculateCumule(echeancier, echeancierImage, iOrganizationService, iTracingService, true, false);
+          PostEcheancierCreate.CalculateCumule(echeancier, echeancierImage, iOrganizationService, iTracingService, true, false);
           iTracingService.Trace("Finished CalculateCumule.");
         }
         catch (Exception ex)
         {
-          throw ex;
+          throw new InvalidPluginExecutionException("An error occurred in the PostEcheancierUpdate plug-in." + ex.Message);
         }
       }
-      iTracingService.Trace("Plugin execution completed");
+      iTracingService.Trace("PostEcheancierUpdate Plugin execution completed");
     }
     #endregion
   }
@@ -247,6 +245,7 @@ namespace BNP_Plugins
   /// <seealso cref="Microsoft.Xrm.Sdk.IPlugin" />
   public class PostEcheancierDelete : IPlugin
   {
+    #region Public Methods
     /// <summary>
     /// Executes plug-in code in response to an event.
     /// </summary>
@@ -254,9 +253,8 @@ namespace BNP_Plugins
     /// <exception cref="InvalidPluginExecutionException">
     /// Invalid 
     /// or
-    /// An error occurred in the PreEcheancierCreate plug-in. + ex.Message
+    /// An error occurred in the PostEcheancierDelete plug-in. + ex.Message
     /// </exception>
-    #region Public Methods
     public void Execute(IServiceProvider serviceProvider)
     {
       // Extract the tracing service for use in debugging sandboxed plug-ins.
@@ -282,15 +280,15 @@ namespace BNP_Plugins
               context.PreEntityImages["PreImagePostEcheancierDelete"] is Entity)
           { echeancierImage = (Entity)context.PreEntityImages["PreImagePostEcheancierDelete"]; }
           iTracingService.Trace("Calling CalculateCumule.");
-          PreEcheancierCreate.CalculateCumule(new Entity(echeancierEntityReference.LogicalName, echeancierEntityReference.Id), echeancierImage, iOrganizationService, iTracingService, false, true);
+          PostEcheancierCreate.CalculateCumule(new Entity(echeancierEntityReference.LogicalName, echeancierEntityReference.Id), echeancierImage, iOrganizationService, iTracingService, false, true);
           iTracingService.Trace("Finished CalculateCumule.");
         }
         catch (Exception ex)
         {
-          throw ex;
+          throw new InvalidPluginExecutionException("An error occurred in the PostEcheancierDelete plug-in." + ex.Message);
         }
       }
-      iTracingService.Trace("Plugin execution completed");
+      iTracingService.Trace("PostEcheancierDelete Plugin execution completed");
     }
     #endregion
   }

@@ -99,3 +99,19 @@ function getIsDirty(attributeName) {
   }
   return isDirty;
 }
+
+//To show or hide a form tab section
+function setVisibleTabSection(tabname, sectionname, show) {
+  var tab = Xrm.Page.ui.tabs.get(tabname);
+  if (tab != null) {
+    if (sectionname == null)
+      tab.setVisible(show);
+    else {
+      var section = tab.sections.get(sectionname);
+      if (section != null) {
+        section.setVisible(show);
+        tab.setVisible(show);
+      }
+    }
+  }
+}

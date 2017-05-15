@@ -99,4 +99,18 @@ PackageEcheancier.Echeancier = {
       }
     }
   },
+
+  onEcheancierLoad: function () {//PackageEcheancier.Echeancier.onEcheancierLoad
+    debugger;
+    var programLookup = getAttributeValue("resi_programmeid");
+    var contratLookup = getAttributeValue("resi_contratid");
+    if (contratLookup != null) {
+      setVisibleTabSection("Initial", "General", false);
+      Xrm.Page.getAttribute("resi_adapte").setRequiredLevel("required");
+    }
+    else if (programLookup != null) {
+      setVisibleTabSection("Adapte", "tab_3_section_1", false);
+      Xrm.Page.getAttribute("resi_initial").setRequiredLevel("required");
+    }
+  },
 }

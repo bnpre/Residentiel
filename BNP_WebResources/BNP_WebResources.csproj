@@ -106,10 +106,8 @@
     <Content Include="IMG\resiZone16.png" />
     <Content Include="IMG\resiZone32.png" />
     <Content Include="JS\Common.js" />
-    <Content Include="JS\resi_Bien.js" />
     <Content Include="JS\resi_Contact.js" />
     <Content Include="JS\resi_Contrat.js" />
-    <Content Include="JS\resi_Echeancier.js" />
     <Content Include="JS\resi_InsertColumnIcons.js" />
     <Content Include="JS\resi_jquery.js" />
     <Content Include="JS\resi_Opportunity.js" />
